@@ -33,7 +33,7 @@ umd_fees_pct <- umd_fees |> mutate(pct_change = (`Fall 2026`- `Fall 2021`)/`Fall
 
 Write a few sentences about what you found in those percentages. What's the story here? What questions do you have?
 
-
+The fee that has had the largest percentage change is Student Sustainability with a 150% percent change and the second highest was the Shuttle Bus with a 58.3% change. Potential stories here could be what is driving these changes, maybe gas prices/the new electric fleet or for sustainability, increased campus efforts. In addition, fees as a whole increased by 25.1%. Some questions I would ask are what expenses have changed; what the additional money is being spent on, and if it is needed.I would also what to know how this has affected the ability of students to pay for college. 
 
 
 When you are done, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
