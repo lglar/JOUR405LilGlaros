@@ -9,6 +9,7 @@ In this assignment, we will be working with a dataset containing information abo
 You will need to load the tidyverse library
 
 ```{r}
+library(tidyverse)
 ```
 
 Then you'll load the data from the web. The URL for the data is: https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/white_house_salaries_2026.csv. You will create a dataframe called `wh_salaries` that contains the data from this URL.
@@ -16,19 +17,20 @@ Then you'll load the data from the web. The URL for the data is: https://raw.git
 ### Task 2: Load the Data and Describe It
 
 ```{r}
+wh_salaries <- read_csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/white_house_salaries_2026.csv")
 ```
 ### Task 3: Describe the Data
 
 You should examine that dataframe carefully by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the categories of incidents. From a reporting standpoint, what stands out to you about this data? Are there any salary values that will cause problems for analysis?
 
 ANSWER HERE
-
+The data has a lot of job categories, especially special assistants, I did not know this many people worked at the White House, so I'm curious about how much they do, especially because a decent amount of the salaries are highly paid. Everyone is paid on a per annum basis. I find it interesting that there are 10 people with a salary of 0, which could also skew the data a bit. I'm wondering why they aren't paid? I'm also interested in what a detailee is, as many of them have salaries over 100k. How is that different than an employee? Is their contract different?
 ### Task 4: Calculate the Mean and Median of the Salaries
 
 Write code to calculate the mean and median of the salaries in the dataset using the `summarize()` function. You don't need to make a new dataframe, just display the results.
 
 ```{r}
-
+wh_salaries |> summarize(mean_salary = mean(SALARY), median_salary = median(SALARY))
 ```
 
 ### Task 5: Add in the minimum and maximum salaries
@@ -36,7 +38,7 @@ Write code to calculate the mean and median of the salaries in the dataset using
 Take the code you just wrote and add in the minimum and maximum salaries (the functions for that are `min()` and `max()`). Your results should show four columns: mean_salary, median_salary, min_salary, max_salary.
 
 ```{r}
-
+wh_salaries |> summarize(mean_salary = mean(SALARY), median_salary = median(SALARY), min_salary = min(SALARY), max_salary = max(SALARY))
 ```
 
 ### Task 6: Describe the Results
@@ -44,9 +46,10 @@ Take the code you just wrote and add in the minimum and maximum salaries (the fu
 Write a couple of sentences describing the results of your analysis. What do the mean and median salaries tell you about the data? What do the minimum and maximum salaries tell you? Are there any outliers in the data?
 
 ANSWER HERE
-
+The mean and median data show me that the salaries are pretty high at the White House, on average around 112,702.7, and that half make above 109,243, which might again indicate a fairly highly paid workplace. The minimum tells me that there are some people likely working there on a volunteer basis or at least for reasons that aren't money/supporting themselves financially. The maximum tells me that while according to the median and mean many workers earn over 100k, nobody earns 200k and over (at least on paper). The median especially helps put this in context, showing there is a difference of 87,957 between the max and median. This is obviously less than the difference between the min and median, which indicates the salaries skew to the upper levels; the values are closer together. The outliers are the zero salaries because they are super low.
 ### Task 7: Story Idea
 
 Based on the data, what is your best story idea? What is the next step you would take to develop that story idea?
 
 ANSWER HERE
+My story idea would be "Why are some White House workers not being paid". Basically to look into why anyone would take the job without being paid. Did they get offered a salary and decline? Are they doing it for the love of the game? Are there other benefits (ethical or unethical) that entice them to the job? The next step I would take is trying to find records of those employee's earnings from other jobs/investments, maybe if they had to file with the SEC (to see if they could be benefiting financially from their job that way). Basically try to find money that is still connected to their job.
