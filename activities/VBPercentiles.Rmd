@@ -39,8 +39,7 @@ team_aces |> mutate(percentile = ntile(total_aces, 100))
 
 Write a couple of sentences that puts Maryland into context with the other teams in the dataset. You can do some Internet research to help with this.
 
-
-
+The University of Maryland may have been in the 95th percentile for aces in 2024, with 223, but that wasn't enough to prevent it from a 14-17 season, with more losses than wins according to The Diamondback. The team was in the same percentile league as Merrimack, who also had a losing season according to their athletics website, and Creighton, who had one of their best ever seasons, according to their athletics website. Scoring aces is no guarantee that a team will "ace" their season.
 When you are done, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
 
 
