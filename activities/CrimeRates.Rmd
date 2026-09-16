@@ -48,7 +48,7 @@ crimes_with_rates <- crimes |> mutate(violent_rate = violent_crime_total/populat
 
 Write a few sentences about what you found in the data. What years had the highest crime rates? What years had the lowest crime rates? Does the pattern match your expectations? What might explain some of the results you found?
 
-
+In terms of violent crime the highest years were 1992 with 99.9 per 10,000, 1993 with 99.8 and 1995 with 98.68. For lowest crime rates the years were 2020, with 41.22 per 10,000 people, 44.12 in 2014, and 2019 with 45.9. For property crime the highest years were 1980 with 577.5 per 10,000, 1981 with 567.5, and 1979 with 549.9. The lowest years were 2020 with 162.6 per 10,000, 2019 with 195.3, and 2018 with 204.4. I did kind of expect the 90's to have the most violent crime because of drug epidemics. I didn't think that early 80s would have the most property crime, because of the same rationale for violent crime. The lower values also made sense because of COVID (referring specifically to 2020 being the year with the lowest values in both respects). I suppose people were too busy social distancing to do much crime.
 
 
 When you are done, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
