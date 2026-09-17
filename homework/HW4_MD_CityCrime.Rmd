@@ -9,6 +9,8 @@ In this assignment, we will be working with a dataset of total crimes reported b
 You will need to load the tidyverse library and the janitor library
 
 ```{r}
+library(tidyverse)
+library(janitor)
 ```
 
 Then you'll load the data from the web. The URL for the data is: https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/md_cities_crime_2019_2020.csv. You will create a dataframe called `md_cities` that contains the data from this URL.
@@ -16,12 +18,16 @@ Then you'll load the data from the web. The URL for the data is: https://raw.git
 ### Task 2: Load the Data
 
 ```{r}
+md_cities <- read_csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/md_cities_crime_2019_2020.csv")
+md_cities <- md_cities |> clean_names()
 ```
 ### Task 3: Calculating Rates
 
 Calculate violent and property crime rates for each city for both years using `mutate()`. You'll create four new columns: `violent_rate_2019`, `property_rate_2019`, `violent_rate_2020`, and `property_rate_2020`. You'll need to figure out the proper unit rate, given that there are varying populations. There's no perfect choice; choose the one that works best for you. Save the results to a new dataframe called `md_cities_rates`.
 
 ```{r}
+md_cities_rates <- md_cities |>
+  mutate(violent_rate_2019 = violent2019/pop2019 * 1000, property_rate_2019 = property2019/pop2019 * 1000, violent_rate_2020 = violent2020/pop2020 * 1000, property_rate_2020 = property2020/pop2020 * 1000)
 ```
 
 ### Task 4: Describe the Rates
@@ -29,13 +35,15 @@ Calculate violent and property crime rates for each city for both years using `m
 Examine the new dataframe, `md_cities_rates`, by clicking on it in the Environment tab in RStudio and sorting by the rate columns. Write a couple of sentences about the results, comparing and contrasting the cities with the highest rates (both violent and property) in 2019 and 2020. Do you see any patterns? What does this tell you about crime in Maryland cities? What's the story here?
 
 ANSWER HERE
-
+In 2019 the city with the highest rate of violent crime was Baltimore City, with a rate of 18.3 per 1000, followedd by 13.1 in Ocean City and 12.9 in Williamsport (Washington County), in 2020 the city with the highest rate, Ocean City was 24 per 1000, followed by Baltimore City with 16, and Cambridge in Dorchester County with 15.7. In 2019, the city with the highest propery crime rate per 1000 was Ocean City with 103.7 followed by Oakland with 73.3, and Elkton with 49.6, and in in 2020 it was Ocean City again with 121.3. followed by Colmar Manor in Prince George's County with 57.6 and Landover Hills in PG county with 56.6. I'm seeing a pattern in that Ocean City and Baltimore County were both in the top two for violent crime, and Ocean was in the top two for everything, being in 1st place 3 times accross violent and property crime. Crime in Maryland cities might be related to the amount of tourists visiting, as while Ocean City doesn't have a very high stable population, it receives a lot of tourists. I feel like the story is "Why does Ocean City have so much crime compared to its population?
 
 ### Task 5: Calculate Percentage Change
 
 Let's add two percentage change columns to your dataframe: one for violent crime rates and one for property crime rates. You'll calculate the percentage change between 2019 and 2020 for each city. Save the results to a new dataframe called `md_cities_change`.
 
 ```{r}
+md_cities_change <- md_cities_rates |>
+  mutate(violent_rate_change= (violent_rate_2020 - violent_rate_2019)/violent_rate_2019 * 100, property_rate_change = (property_rate_2020 - property_rate_2019)/property_rate_2019 * 100,)
 ```
 
 ### Task 7: Describe Percentage Changes
@@ -43,12 +51,16 @@ Let's add two percentage change columns to your dataframe: one for violent crime
 Look at the `md_cities_change` dataframe by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the percentage change results. What's more interesting here, the patterns or the outliers? What's the story in the data?
 
 ANSWER HERE
+So the top six values for violent crime rate changes have a value of infinity, so I'm going to ignore that in favor of more reachable comparable values. Bellow than, the highest percent change was 895.3 in Edmonston (PGC), followed by Poolesville (Moco) with 607.1, and Pocomoke City (Worchester) with 301. For property the top four were infinity values, so below that the next three were 320.8 (Crisfield, Somerset), 199.6 (Cecilton, Cecil), and 188.4 (Garrett Park, Moco). I do think some of the infinity values are interesting, like Chevy Chase Sector V in Moco because it wasnt simply a doubling of one crime to two, it was a rate of 8.5 that went up to 23.5, which seems like a pretty big jump. I do feel like the pattern is less interesting than whatever went on in Chevy Chase Sector V, but at large, the high changes in Crisfield and Edmonston seem notable, because it it such a high jump. The story is that violent crime was nearly 900% more in Edmonston, and property around 320 times more (basically what caused this jump, especially give the pandemic).
 
 ### Task 8: Tell the Best Story
 
 Write up a lede and nutgraf of a story with the _best_ story idea you've found in this assignment. The lede should be a single sentence that summarizes the most important information in the data. The nutgraf should be a paragraph that provides more context and explains why the data is important.
 
 ANSWER HERE
+The pandemic might be keeping many criminals inside, but in Ocean City property and violent crime continue to have some of the highest rates in Maryland.
+
+Ocean City beat out Baltimore City last year for the highest rate of violent crime per 1000 people, with 24 crimes occurring for every 1000 people, and remained in first place in property crime. The city's rate of property crime changed by 17% from 2019 to 2020, from a rate of 103.7 per 1000 to a rate of 121.3. Violent crime also increase by 82.9% from its 2019 value of 13.1 per 1000. Consider the size of Ocean City in 2020: 6,926, as compared to Baltimore City's size: 588,593. Given Ocean City's population, its rate of crime is vastly different compared to similarly sized cities, like Cheverly in Prince George's County, whose rate for violent crime in 2020 was 4 per 1000 in a municipality with a population of 6,456, or Taneytown in Carroll County, population 6,824, which only had a 1.2 violent crime rate per 1000. Cheverly and Taneytown had property crime rates of 16 and 5.1 per 1000, respectively.This could indicate other circumstances that could explain why the crime is so much higher in Ocean City as compared to similar jurisdictions.  
 
 ### Task 9: Save Your Work and Put it on GitHub
 
