@@ -64,4 +64,22 @@ Ocean City beat out Baltimore City last year for the highest rate of violent cri
 
 ### Task 9: Save Your Work and Put it on GitHub
 
-Save this notebook, then commit it to your local repository. Push the changes to your GitHub repository and submit the URL for this file in ELMS.
+###Task 10
+```{r}
+md_cities_percentiles <- md_cities_rates |> mutate(percentile = ntile(violent_rate_2020, 100))
+
+
+```
+10 cities are above the 90th percentile, 1 is exactly on the 90th percentile. 
+```{r}
+md_cities_percentiles |>
+   summarize(iqr_vio_rate = IQR(violent_rate_2020))
+  
+```
+I would say this does not change my story idea because Ocean City is in the 100th percentile, and for the iqr I would need the q3 value to determine if Ocean City is a true outlier. I took the liberty of finding that and it seems that Ocean City is because 1.5 times 4.2 = 6.3, and 6.3 plus 4.2(the 3rd quartile) is 10.5, less than Ocean City's value of 24 for violent crime rate in 2020. 
+```{r}
+md_cities_percentiles |>
+  summary(data(violent_rate_2020))
+```
+
+
