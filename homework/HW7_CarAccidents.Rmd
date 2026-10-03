@@ -32,7 +32,7 @@ library(lubridate)  # For working with dates
 Load the accident data from our CSV file at https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/daily_accidents.csv into a dataframe called `accidents`:
 
 ```{r load-data}
-
+accidents <- read_csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/daily_accidents.csv")
 ```
 
 ## Data Exploration
@@ -69,7 +69,7 @@ ggplot(accidents, aes(x = date, y = total)) +
 Looking at the time series visualization above, identify at least two noticeable patterns or anomalies. What questions would you want to investigate further based on this initial view of the data? How might these visual patterns translate into potential story angles?
 
 ANSWER HERE
-
+Looking at the blue line, there is a very drastic dip in the early-ish months of 2020 and then a peak in mid to late-ish 2021. To investigate further I would want to see if there was any relation to COVID, especially because as far as I remember, late 2021 was when I went back to high school in-person and a lot of the school shutdowns ended, so maybe the beginning of the covid pandemic and the lessening of restrictions have to do with this pattern. Essentially I would ask "Is this pattern related to Covid-based restrictions?" This would translate to a story angle based on the COVID pandemic and how it affected accident patterns. Especially because accidents went up after early-ish 2020. This could also be related to changing COVID restrictions.
 The daily data is quite noisy, so let's also look at weekly patterns:
 
 ```{r weekly-patterns}
@@ -108,6 +108,7 @@ ggplot(accidents, aes(x = day_of_week, y = total)) +
 Based on the day-of-week analysis, which day(s) have the highest and lowest average accidents? Why might these patterns exist?
 
 ANSWER HERE
+Friday and Saturday have the highest medians and averages of accidents. The lowest averages were Monday and Wednesday. These patterns might exist because of drunk driving since people tend to go out on Friday and Saturday nights and then drive drunk (although they could also do this on regular days), or maybe people going out on the weekends to places of interest (like the beach) that they might be less familiar with (as opposed to a work commute)and then do more accidents.
 
 ## Calculating Z-Scores
 
@@ -119,9 +120,9 @@ Now, using the accidents dataframe, add three columns using `mutate()`: mean_acc
 # Calculate z-scores for total accidents
 accidents <- accidents |>
   mutate(
-    mean_accidents = REPLACE_ME,
-    sd_accidents = REPLACE_ME,
-    z_score = (REPLACE_ME - REPLACE_ME) / REPLACE_ME
+    mean_accidents = mean(total),
+    sd_accidents = sd(total),
+    z_score = (total - mean_accidents) / sd_accidents
   )
 
 # Display the data with z-scores
@@ -157,6 +158,7 @@ unusual_days |>
 Choose one of the top 10 unusual days and research what might have happened on that date. Look for weather events, holidays, major incidents, or other factors that could explain the unusual number of accidents. Briefly describe your findings and how you would incorporate this context into a story.
 
 ANSWER HERE
+I looked up October 29, 2021, which had a z score of 4.77. In PG County that day there was big historic flooding according to ABC7, which could explain the accident spike because driving in bad weather is risky. I would incorporate this into a story by showing specific accidents caused by the flooding to show how the weather caused the spike.
 
 Let's visualize these unusual days:
 
@@ -186,9 +188,9 @@ Let's calculate z-scores that account for day of week patterns based on the same
 accidents <- accidents |>
   group_by(day_of_week) |>
   mutate(
-    dow_mean = REPLACE_ME,
-    dow_sd = REPLACE_ME,
-    dow_z_score = (REPLACE_ME - REPLACE_ME) / REPLACE_ME
+    dow_mean = mean(total),
+    dow_sd = sd(total),
+    dow_z_score = (total - dow_mean) / dow_sd
   ) |>
   ungroup()
 
@@ -208,6 +210,7 @@ unusual_dow |>
 Compare the days that have extreme z-scores overall versus those with extreme day-of-week z-scores. How do these lists differ? What journalistic insights can you draw from comparing these two different approaches to measuring "unusual" days?
 
 ANSWER HERE
+They have pretty similar z-scores in my opinion, but dow days have smaller zscores by a bit. Drawing journalistic insights from comparing these two approaches, you would get more of a holistic and accurate approach by using the dow method because you're accounting for the natural week patterns. 
 
 Let's see how many unusual days we have for each day of the week:
 
@@ -287,7 +290,7 @@ unusual_monthly |>
 Based on the monthly pattern analysis, which months have the highest and lowest average accidents? Develop a hypothesis about why these seasonal patterns exist.
 
 ANSWER HERE
-
+October and December are the highest months and January and March are the lowest. Hypotheis: October and December are the highest months due to holiday celebrations and alcohol, and the lowest months aren't big holiday months and thus have less.
 ## Identifying Extreme Outliers
 
 Let's look specifically at days with extremely unusual accident counts (z-scores beyond ±3):
@@ -312,8 +315,14 @@ if(nrow(extreme_outliers) > 0) {
 For the extreme outliers identified (z-scores beyond ±3), what do they have in common?
 
 ANSWER HERE
-
+Most are Saturday and Friday (the ones with positive zscores) and the ones with negative zscores are days with nights before a workday.
 ## Your Best Story Pitch
 
 ### Task 10 (5 points)
 Based on all the analyses performed, craft your best story pitch, including a headline and lede. Be sure to include what kinds of sources/people you'd talk to for the story.
+Pitch:
+Slug: Spooky_accidents
+Headline: The spookiest month for your car insurance premium
+Pitch description: A focus on the reasons why October has the highest daily averages of car accidents.
+Lede: October might feature a profusion of witches and pumpkins, but it also features the highest daily average of car accidents for any month in Prince George's County.
+Sources: Maryland Highway Safety Office, Prince George's County Police, people involved in car accidents.
