@@ -9,6 +9,8 @@ In this assignment, you'll build on your z-score skills to answer probability qu
 Load the tidyverse and the White House salaries data from https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/white_house_salaries_2025.csv into a dataframe called `wh_salaries`
 
 ```{r}
+library(tidyverse)
+wh_salaries <- read_csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/white_house_salaries_2025.csv")
 ```
 
 ### Task 2: Filter and summarize (2 points)
@@ -26,12 +28,18 @@ wh_paid <- wh_salaries |>
 Now create a histogram of the paid salaries with a vertical line for the mean and two more for ±1 standard deviation, similar to what you did in HW6 with Spotify data.
 
 ```{r}
+wh_paid |> 
+  ggplot() + 
+  geom_histogram(aes(x = SALARY), binwidth = 20000) +
+  geom_vline(aes(xintercept = mean(SALARY)), color = "red", linetype = "dashed", size = 1) +
+  geom_vline(aes(xintercept = mean(SALARY) - sd(SALARY)), color = "blue", linetype = "dashed", size = 1) +
+  geom_vline(aes(xintercept = mean(SALARY) + sd(SALARY)), color = "blue", linetype = "dashed", size = 1)
 ```
 
 **Describe the shape of the distribution. Is it roughly normal? Skewed? Where do most salaries cluster?**
 
 ANSWER HERE
-
+It is skewed to the right and most salaries are between slightly lower than 75k and slighly over 150,000
 ### Task 3: The Empirical Rule (3 points)
 
 The empirical rule (also called the 68-95-99.7 rule) says that for a normal distribution:
@@ -65,7 +73,7 @@ empirical
 **How closely does the data follow the empirical rule? What does any deviation tell you about the distribution?**
 
 ANSWER HERE
-
+It's pretty close, within 1 SD is 2.1 percentage points below the expected, 2 sd is 3.8 percentage points below, and within 3 is .3 percentage points above. The deviation of 100% being with 3 sd tells me that there aren't really any outliers.
 ### Task 4: From z-scores to probability with pnorm() (4 points)
 
 Remember the car thefts z-score activity from class? Well, I want to return to that briefly, introduce a new tool called pnorm() and then apply it here. So open that CarTheftZScores notebook and, at the bottom, copy and paste in the contents here: https://gist.githubusercontent.com/dwillis/25102889f576b1707576b85e0be0c353/raw/1ca2be9636497cb5293ff7b1f4e6ed8e27a9e049/car_theft_pnorm.rmd
@@ -79,6 +87,7 @@ Re-run all of the blocks in CarTheftZScores notebook, including the code you jus
 Where `z_score` is one row's z-score. Now apply the same approach to salaries.
 
 Your editor asks: **"What's the probability that a randomly selected White House employee makes more than $150,000?"**
+17% based on projections and 18.2% of actual values.
 
 To answer this:
 1. Calculate the z-score for $150,000
@@ -103,23 +112,24 @@ actual_prob
 **Write a sentence describing this probability in plain English. How does the normal approximation (prob_less) compare to the actual percentage?**
 
 ANSWER HERE
+The approximation is about 17% while the actual percentage is 18.2%. The real percentage is only about one percentage point above the educated guess percentage.
 
 ### Task 5: Probability between two values (3 points)
 
 Now your editor asks: **"What percentage of White House employees make between $80,000 and $120,000?"**
-
+33%
 You'll need to calculate z-scores for those two figures, use `pnorm()` for each, and subtract to find the probability between them. Update the REPLACE_ME figures with the appropriate numbers.
 
 ```{r}
 
-z_lower <- (REPLACE_ME - mean_sal) / sd_sal
-z_upper <- (REPLACE_ME - mean_sal) / sd_sal
+z_lower <- (80000 - mean_sal) / sd_sal
+z_upper <- (120000 - mean_sal) / sd_sal
 
 prob_between <- pnorm(z_upper) - pnorm(z_lower)
 prob_between
 
 # Verify with actual data
-actual_between <- sum(wh_paid$SALARY >= REPLACE_ME & wh_paid$SALARY <= REPLACE_ME) / total_n
+actual_between <- sum(wh_paid$SALARY >= 80000 & wh_paid$SALARY <= 120000) / total_n
 actual_between
 
 ```
@@ -127,6 +137,7 @@ actual_between
 **Interpret this result. What does this "middle range" tell us about the White House salary structure?**
 
 ANSWER HERE
+This middle range tells us that about a third of the data is between 80k and 120k, aka around 33%. This also tells us that a decent number of employees are making decently high salaries and that the workplace is decently paid.
 
 ### Task 6: Expected vs. observed (3 points)
 
@@ -159,6 +170,7 @@ bins |> select(category, expected_count, observed_count, difference)
 **Where does reality differ most from what the normal distribution predicts? What might explain those differences?**
 
 ANSWER HERE
+The normal distribution predicted a whopping 73 instances less of salaries from 60-90k, and the difference might be explained by the fact that the salary distribution in the White House is skewed, the normal distribution also predicts way more below 60k salaries. The nd predicts that 90-120k will have the most values, and I think putting the salaries into 30k bins also distorts the expected peak by lumping values together.I think in general the White HOuse salaries skew high-ish, but not as high as the nd predicts. The higher salaries might be skewing how the nd views the salary distribution.
 
 ### Task 7: Story pitch (4 points)
 
@@ -167,7 +179,9 @@ Based on your probability analysis, write a headline and lede for a story about 
 Then write 2-3 sentences describing how you would use probability thinking to advance this story — what could you compare these probabilities to, and what additional analysis would help?
 
 ANSWER HERE
-
+Headline: Many in White House Earn More Than Average Joe
+Lede: According to White House salary data around 66% of White House employees earn from around 75,000 to 150,000, more than the average American at $69,770 (Forbes).
+I would compare these probabilities to the average salary ranges in other areas of government, and in industry (probably compare it to various different branches of industry like education). Maybe I could figure out the likelyhood of the average american earning in that salary range as compared to the likelyhood of someone in the white house doing so.
 ### Task 8: Save Your Work and Put it on GitHub
 
 Save this notebook, then commit it to your local repository. Push the changes to your GitHub repository and submit the URL for this file in ELMS.
