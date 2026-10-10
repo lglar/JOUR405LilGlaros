@@ -27,24 +27,29 @@ sample_5 <- mnm_data |> sample_n(5)
 
 ### Task 4: Calculate the mean age and standard deviation of the sample, using either the red or black number of M&Ms
 ```{r}
-sample_5 |>
-  mean(sample_5$red)
+
+  proportion <- mean(sample_5$red) 
+  sd <- sd(sample_5$red)
+
+
 ```
 
 
 ### Task 5: Calculate the mean age and standard deviation of the population, using the same measure as in Task 4
 ```{r}
 
+mean_pop <- mean(mnm_data$red)
+sd_pop <- sd(mnm_data$red)
 ```
 
 
 ### Task 6: Compare the sample and population statistics
 
 Compare the two sets of means and standard deviations. Are they similar?
-
+The means and sds are relatively similar for the red m&m population and sample. For the population the mean is 72.98 and the mean for the sample is 77.8, so the mean for the sample is higher, but they're only about 5 apart. The sds are even closer, the population one is 16.46 and the sample one is 14.7, so only 2 apart. Given that some of the values I noticed in the sample are as high as the 90s and as low as the 50s for red m&ms I'd say they're pretty close.
 ### Task 7: Describe the results
 
 Write a few sentences about what you found in the data. What does this tell you about the M&Ms dataset and about the act of random sampling?
-
+In the data I found that the exact means can different between a sample and its population. This tells me that a sample of 5 is not an exact representative of the population of red m&ms, but gets it pretty close. For sampling in general, it shows that 5% of the population being sampled can get you close to an accurate number. Also for the date in general, the mean kind of takes out the variance in the data, so the sd is really useful given some sets of m&ms had far less or more red ones than others. It shows that the data varies a lot because the sds are 14.7 or 16.46
 
 When finished, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
