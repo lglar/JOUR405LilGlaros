@@ -95,7 +95,7 @@ Create two histograms side by side using the code structure from class. Add a ve
 simulations_all <- bind_rows(simulations_50, simulations_500) |> 
   mutate(sample_size = paste("n =", sample_size))
 
-ggplot(simulations_all, aes(x = population_proportion)) +
+ggplot(simulations_all, aes(x = proportion)) +
   geom_histogram(bins = 30, fill = "steelblue", color = "white") +
   geom_vline(xintercept = population_proportion, color = "red", linetype = "dashed", linewidth = 1) +
   facet_wrap(~sample_size) +
@@ -114,17 +114,20 @@ ggplot(simulations_all, aes(x = population_proportion)) +
 **Describe the shape of the n=50 histogram.** Is it as symmetric as the unaffiliated histogram from class? Why do you think that is, given that White Evangelicals make up only about 10% of the population?
 
 ANSWER HERE
+I think it is pretty close to how symmetric the unaffiliated one was, but it's a little father apart with the values. I feel like it is close to being a similar level of symmetric because since it is only 10% of the population, any one sample could have very little or a lot of the population represented. I think this follows for even larger percentages, where there's a change the percentage could be large or lower. Also the central limit theorem likely applies in this case given the large number of tests which would then lead to a bell structure. 
 
 **Compare the n=50 and n=500 histograms for this group.** How much does the distribution change with a larger sample? Is the improvement bigger or smaller than what you saw in class with the unaffiliated group?
 
 ANSWER HERE
+The distribution is more clustered around the population proportion. I think it is a bigger improvement with the unaffiliated data because the values are more spread out in the smaller group than they were in this assignment; 0.2-0.5 ish in the unaffiliated 50 group and 0-0.2 in this assignment's 50 group.
 
 **A news organization wants to report on White Evangelical voters using a poll of 200 people.** Based on your simulations, roughly how many White Evangelical respondents would that poll be likely to include? What does that suggest about the reliability of estimates for smaller subgroups?
 
 ANSWER HERE
+Around 10%, which suggests that smaller subgroups are not neccesarily unreliable for estimates. 
 
 **Imagine you are covering the 2028 presidential election and a campaign shares a poll showing White Evangelical support at 78%.** The poll sampled 400 people. Based on everything you've seen in this assignment and in class, what would you want to know before reporting that number?
 
 ANSWER HERE
-
+Where was this sampled, was the sample of White evangelicals drawn in a way that was representative?
 When finished, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
