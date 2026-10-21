@@ -42,7 +42,7 @@ sleep_stats
 **Answer this question:** Based on these numbers alone, what would you tell the health reporter? Why might it be risky to report the average as the definitive answer for all students?
 
 ANSWER HERE
-
+I would tell the health reporter that students seem to vary a decent bit in terms of how much sleep they get since the range of one standard deviation away is 6.38-9.08. It is risky to report the data as an answer for all students since the sample is much smaller than the student population
 ### Task 3: Calculate the standard error
 
 The standard error tells us how much our sample mean would vary if we took many different samples of 37 students. It's the key to moving from "this is what 37 students told us" to "this is what we think is true for the whole campus." The formula is: standard deviation divided by the square root of the sample size.
@@ -59,7 +59,7 @@ sleep_stats
 **Answer this question:** The standard error is much smaller than the standard deviation. Why? What does each one measure?
 
 ANSWER HERE
-
+I think it is smaller because it is a derivative of the standard deviation;the sd divided by the square root of the sample size, so it would only being equal for a sample size of one. The standard deviation measures the clustering around the mean, while the se measures the variance of the mean, so maybe there are less variances among averages. 
 ### Task 4: Calculate a 95% confidence interval
 
 Now we'll build our confidence interval. For a 95% CI with a small sample, we use the t-distribution. The `qt(0.975, df = n - 1)` function gives us the critical value — the number of standard errors we go above and below the mean. We multiply critical value by the standard error to get the margin of error, then add/subtract from the mean.
@@ -80,6 +80,7 @@ sleep_stats |>
 **Answer this question:** Write one sentence explaining what this confidence interval means in plain English that a reader would understand.
 
 ANSWER HERE
+It is very highly likely that on average students at this university get around 7.3 to 8.2 hours of sleep a night. 
 
 ### Task 5: Visualize the distribution with the confidence interval
 
@@ -113,6 +114,7 @@ ggplot(sleep_data, aes(x = hours)) +
 **Answer this question:** Look at the chart. Notice that the confidence interval is much narrower than the spread of individual data points. Why? What's the difference between the variation in individual sleep hours and the uncertainty about the average?
 
 ANSWER HERE
+Because the confidence interval is about the confidence that the average is within a certain range, not the confidence that the data is all within a range. The difference between the variations and the uncertainty is the variation is once again, the whole data set, and the uncertainty is about the mean. 
 
 ### Task 6: The CDC question — is 7 hours within the interval?
 
@@ -135,6 +137,7 @@ sleep_stats |>
   c) "Survey: Students Getting Recommended Amount of Sleep"
 
 ANSWER HERE
+C because the range of the mean is around 7.3 and the highest is 8.2. 7.3 is only a little bit higher than 7 hours (around like 7:20 ish).
 
 ### Task 7: What about a bigger sample?
 
