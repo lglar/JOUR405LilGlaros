@@ -59,3 +59,4 @@ weekly_wmata |>
 **Answer this question:** Describe the trend you see. Is ridership going up, down, or staying flat? What are the big dips, and what might explain them? What would you want to know before writing a story about Metro weekly ridership trends?
 
 ANSWER HERE
+It's going up a little (couple hundred thousand)based on the red line, but the blue line went really far down in late 2025 and early 2026. This could be because of weather during the colder months, especially because of the big blizzard. It seems to go up in the spring which could be because of the cherry blossoms and their popularity.I would want to know if stations were closed or if there are any special circumstances causing the pattern, like holidays or special events. I'd also like to know how they account for illicit riders; turnstile hoppers.
