@@ -1,6 +1,6 @@
 ---
 title: "HW9: Car Theft Confidence Intervals & Margin of Error"
-name: REPLACE WITH YOUR NAME
+name: Lillian
 ---
 
 Your editor wants to know what a "typical" month of car thefts looks like in Prince George's County. Not just the average — she wants to know how confident you can be in that number. Using monthly figures, confidence intervals and margin of error, you'll come up with an answer and decide whether the data supports a clear story. As with the previous homework, provide answers in this notebook when prompted and you will have to fill in values where you see REPLACE_ME. Get started by loading the tidyverse in a new R block.
@@ -10,6 +10,7 @@ Your editor wants to know what a "typical" month of car thefts looks like in Pri
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 # LOAD THE TIDYVERSE
+library(tidyverse)
 ```
 
 ### Task 2: Load the Prince George's county crime data
@@ -30,6 +31,7 @@ glimpse(car_thefts)
 We'll make a line chart using geom_line() to try and illustrate any trend over time. What's your initial reaction to the change in car thefts? Is there a trend? If your editor asked you "how many car thefts happen in a typical month?", what would you say based on this chart alone?
 
 PUT ANSWERS HERE
+It seems to be going down over time, which is also the trend. If my editor asked me how many car thefts happen in a typical month I would say it depends on the year and I would need to average the months since they are so different. If I had to give a number I'd say around 400 because it is smack dab in the middle of the value range but I wouldn't be sure.
 
 ```{r}
 
@@ -60,9 +62,9 @@ We've got a small number of months, so we need to quantify the uncertainty aroun
 theft_summary <- car_thefts |>
   summarize(
     mean_thefts = mean(total),
-    sd_thefts = sd(REPLACE_ME),
+    sd_thefts = sd(total),
     months = n(),
-    se_thefts = sd_thefts / sqrt(REPLACE_ME),
+    se_thefts = sd_thefts / sqrt(32),
     margin_error = qt(0.975, df = months - 1) * se_thefts
   )
 
@@ -74,6 +76,7 @@ theft_summary
 **Answer this question:** Explain in your own words what the margin of error tells us here. If you were writing a story, how would you use this number? For example, how would you complete this sentence: "Prince George's County averages about ___ car thefts per month, plus or minus ___."
 
 PUT ANSWERS HERE
+The margin of error tells us that the true mean amount of thefts could be anywhere from around 409.75 to 341.37. I would use this number to show how the data can range in a story, putting 376 in the first blank and 34 in the second.
 
 ### Task 5: Build the confidence interval
 
@@ -83,8 +86,8 @@ Now let's turn the margin of error into a full confidence interval — the range
 
 theft_summary <- theft_summary |>
   mutate(
-    ci_lower = mean_thefts - REPLACE_ME,
-    ci_upper = mean_thefts + REPLACE_ME
+    ci_lower = mean_thefts - margin_error,
+    ci_upper = mean_thefts + margin_error
   )
 
 theft_summary |>
@@ -95,13 +98,14 @@ theft_summary |>
 **Answer this question:** If a county official claimed "car thefts are down to about 300 per month," does your confidence interval support that claim? What about a claim of 350 per month? Explain how the confidence interval helps you evaluate each claim.
 
 PUT ANSWERS HERE
-
+1. No, because the confidence interval shows that the lower value of the range is 341.38, indicating that the value claimed is not in the range.
+2. Yes, because 350 falls in the range of the confidence interval. However it's still on the lower end of the scale, so I would still be cautious about the official's claim.
 ### Task 6: Visualize the data with the confidence interval
 
 Let's make a chart showing the data with the mean and the 95% confidence interval. Does this change anything about your answer from Task 3?
 
 PUT ANSWERS HERE
-
+I feel like it makes me skeptical to state that the average month sees 350 car thefts per month because so many of the values fall out of the range for the mean's 95% confidence interval. I know the confidence interval is regarding the mean and not all the data, but the fact that the values don't seem very clustered to the mean gives me pause.
 ```{r}
 # Make a chart with the mean and CI
 car_thefts |>
@@ -133,7 +137,7 @@ In class we learned that MoE = 1/√n × 100 as a quick approximation for polls.
 hypothetical_summary <- tibble(
   mean_thefts = theft_summary$mean_thefts,
   sd_thefts = theft_summary$sd_thefts,
-  months = REPLACE_ME,
+  months = 40,
   se_thefts = sd_thefts / sqrt(months),
   margin_error = qt(0.975, df = months - 1) * se_thefts,
   ci_lower = mean_thefts - margin_error,
@@ -156,7 +160,7 @@ comparison
 **Answer this question:** How did the margin of error and confidence interval change? What does this tell you about the tradeoff between having more data and being able to make precise claims? If you were covering crime trends, how many months of data would you want before writing a definitive story?
 
 PUT ANSWERS HERE
-
+The both became smaller, and this tells us that having more data can help get more precise results and thus claims, even though you'd need to analyze more data, which is the trade-off.If I were covering crime trends I feel like I'd want at least 5 years or 60 months of data to get the margin of error as low as possible, because 345-405 crimes has a pretty decent gap and could distort patterns.
 ### Task 8: Reporting with uncertainty
 
 Based on everything you've calculated, answer the following:
@@ -166,6 +170,10 @@ Based on everything you've calculated, answer the following:
 2. Your editor says "Just tell me if car thefts are going up or down." Using only the confidence interval (no significance testing yet), what's the most accurate answer you can give? What would you need to do next to answer that question more definitively?
 
 PUT ANSWERS HERE
+1. Headline: Car Thefts Average Around 341-410 Per Month in Prince George's County
 
+Lede: It might be wise to lock your car in  Prince George's County. According to data from the county from July 2023 to February of 2023, the monthly average of car thefts is 375.56. The average could be 34 car thefts higher or lower, indicating that the average car thefts could be as high as 409.75 or as low as 341.37. However, months vary in terms of how many car thefts occur, so the number of car thefts a month could be far higher or lower than the mean or its ranges.
 
+2. 
+I would say crime is going down right now, not in general, as RIGHT NOW the numbers are lower than the mean and the 95% confidence interval, however looking at the data the numbers rebound to at or above the mean after going down, so I couldn't say it is going down in general. I would need to see more data to see if it is going down or see if the change is considered significant.
 When you are finished, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
