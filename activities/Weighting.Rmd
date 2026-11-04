@@ -237,4 +237,4 @@ The rarely/never yes category has the biggest difference with -3.6 difference.
 2. How might these differences affect reporting on likely voter turnout?
 These differences might mean that over-represented groups might skew the results if the survey isn't weighted, leading to different likely voter turnouts being reported based on survey analysis methodology.
 3. Why do you think these differences exist? What does this tell us about who might be over or under-represented in the sample?
-I think these differences exist because whatever demographic group(s) has/have more never/rarely voters was more likely to respond to the survey, and it tells us that that group was over-represented in the survey because the percentage of yes wen't down by 3.6 percentage points. 
+I think these differences exist because whatever demographic group(s) has/have more never/rarely voters who responded yes were more likely to respond to the survey, and it tells us that that group was over-represented in the survey because the percentage of yes went down by 3.6 percentage points. 
