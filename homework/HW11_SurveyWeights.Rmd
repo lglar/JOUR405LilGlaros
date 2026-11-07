@@ -1,6 +1,6 @@
 ---
 title: "HW11: Education Level and Survey Weighting"
-author: "Your Name Here"
+author: "Lillian Glaros"
 ---
 
 ```{r setup, include=FALSE}
@@ -47,19 +47,19 @@ ggplot(nonvoters_data, aes(x = weight)) +
 **Question 1:** Most weights cluster near 1.0, but some are much higher or lower. What does a weight of 0.2 tell you about that respondent's group in the sample? What about a weight of 3.5? Why might a pollster assign such extreme weights?
 
 ANSWER HERE
-
+A weight of 0.2 tells me that that group is overrepresented in the sample (really overrepresented) compared to the larger population. A weight of 3.5 tells me that the group of that particular respondent is really underrepresented compared to the larger population. Such extreme weights would be assigned when groups are drastically over or under represented compared to the population. A reason behind this over or under representation is if some populations are more or less likely to participate in the survey or if the recruitment methodology was better at getting certain groups. Also some groups are smaller in the population in general, and thus might be harder to find.
 ## Task 2: Education Distribution in the Sample (3 points)
 
 ```{r education-distribution}
 nonvoters_data |>
-  count(REPLACE_ME) |>
+  count(educ) |>
   mutate(percentage = round(n / sum(n) * 100, 1))
 ```
 
 **Question 2:** College graduates are overrepresented in most surveys. Does that appear to be true here? Why might college graduates be more likely to respond to a survey than people with less education?
 
 ANSWER HERE
-
+I think that they are over represented her because I looked up the census statistics for adults 25+ and it is a couple of points higher than the percentage of bachelors and postgrad degrees combined (not sure if this data includes associates degrees or post graduate degrees) (https://www.census.gov/newsroom/press-releases/2022/educational-attainment.html). College graduates might be more likely to respond to surveys because they are more educated on the topics involved and thus are more comfortable giving an opinion. Being educated they might also surf websites that provide these surveys (like NYT or Pew). They also might be more educated on the importance of surveys in general to research and citing public opinion. In college I am going to use surveys for a research project so I might be more likely to respond because I know they can serve an important scientific purpose. People with less education might not feel as comfortable answering a survey if they are less educated on it, and might not be surfing news or research sites that share these surveys. They also might not know why the surveys are useful.
 ## Task 3: Unweighted Voting Intentions by Education (4 points)
 
 This is what the results look like if you treat every respondent equally — no weights applied.
@@ -88,6 +88,7 @@ unweighted_summary
 **Question 3:** Based only on these unweighted numbers, write a one-sentence headline for a story about education and voting intentions.
 
 ANSWER HERE
+More people  with a college degree intend to vote compared to those with less education.
 
 ## Task 4: Weighted Voting Intentions by Education (2 points)
 
@@ -97,7 +98,7 @@ Now apply the weights. Instead of counting respondents, we sum their weights —
 weighted_by_education <- nonvoters_data |>
   filter(!is.na(Q21), Q21 > 0, !is.na(educ)) |>
   group_by(educ, Q21) |>
-  summarize(weighted_count = sum(REPLACE_ME), .groups = "drop_last") |>
+  summarize(weighted_count = sum(weight), .groups = "drop_last") |>
   mutate(weighted_total = sum(weighted_count),
          weighted_percentage = weighted_count / weighted_total * 100) |>
   ungroup()
@@ -125,7 +126,7 @@ viz_data <- bind_rows(
   weighted_by_education |>
     filter(Q21 == 1) |>
     mutate(Type = "Weighted",
-           percentage = REPLACE_ME) |>
+           percentage = weighted_percentage) |>
     select(Type, educ, percentage)
 )
 
@@ -146,6 +147,7 @@ ggplot(viz_data, aes(x = educ, y = percentage, fill = Type)) +
 **Question 4:** Which education group shows the biggest shift between weighted and unweighted results? In percentage points, how large is that shift? Does weighting change the story, or does it just change the exact numbers?
 
 ANSWER HERE
+High school or less with 2.7 more percentage points of high school or less people intending to voted unweighted. I think it just changes the exact numbers because it is still a majority and less than the other categories.
 
 ## Task 6: The UMD Belonging Survey (8 points)
 
@@ -154,3 +156,6 @@ Earlier in class this week, we looked at the 2024 UMD Belonging and Community Su
 **Question 5:** Based on what you've learned in this assignment, write 2-3 paragraphs as if you were a reporter evaluating the UMD survey before writing a story based on it. Address: (1) what the lack of weighting means for how you'd use the results, (2) which groups in the UMD survey appeared most underrepresented based on Figures 1 and 2, and (3) what question you would ask the survey's authors before publishing.
 
 ANSWER HERE
+The lack of weighting means that I as a reporter will state the results as less certain given that they may not be representative of the population. Hispanic and Black students seem the most represented. This means that these populations need weighting in order to be theoretically be representative. Other populations are over represented, including Asian students, multiracial and unknown. These populations would need to be weighted under 1. Men are also under represented and would need to be weighted as more, and women less since they are over represented.
+
+Before publishing I would ask if the results would have changed if they were weighted and by how much. I would also ask what they did to recruit under represented groups. Another question I would ask is if the number of staff and faculty were representative of their proportion of the population because that too could skew results. Also if the grade level numbers were representative as well as in and out of state students. My final question would be if lower income students were representative as well. 
