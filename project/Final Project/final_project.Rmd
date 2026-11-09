@@ -1,0 +1,34 @@
+```{r}
+library(tidyverse)
+```
+
+```{r}
+data23 <- read_excel("SummaryTables-813-11-01-26 18-17.xlsx") 
+
+```
+
+```{r}
+data24 <- read_excel("SummaryTables-813-11-01-26 18-23.xlsx")
+```
+```{r}
+data21 <- read_excel("SummaryTables-813-11-01-26 18-25 (1).xlsx")
+```
+```{r}
+data20 <- read_excel("SummaryTables-813-11-01-26 18-25 (2).xlsx")
+```
+```{r}
+data22 <- read_excel("SummaryTables-813-11-01-26 18-25.xlsx")
+```
+The data is of Big 10 Institutions and is from the Integrated Post Secondary Education Data System. 
+Link: https://nces.ed.gov/ipeds/SummaryTables/report/813?templateId=8131&year=2023&expand_by=1&tt=institutional&instType=2&sid=6b0d27af-93cd-4002-9690-b75f4b28ffab (note, this does not lead you to the exact data, as the link doesn’t work when the institutions are preselected, but in order to get the exact data I selected “Select Institutions” and added the Big 10 institutions to “My Institutions.” For report options I selected “User-selected institutions” and under “Expand By” selected “Gender”.
+
+The data sheets contain 4 year, 5 year and 6 year completion rates at Big 10 institutions broken down by Men and Women. It includes both rates and numbers of student graduating within those years, as well as the cohort total number of students for men, women, and those groups combined. Notably it does not include students outside of those genders in the broken down categories. This information is included for Bachelor degree seekers as well as other degree seekers, but only data involving those seeking a bachelor's degree is relevant for my purposes.
+
+The time periods the five sheets cover is kind of complicated as the site I got it from does not explain it at all, but according to Professor Willis each sheet is about the cohort that began around 6 years before the year on the sheet, so the starting years represented are Fall 2014, Fall 2015, Fall 2016, Fall 2017, and Fall 2018. Thus the four year cohorts for each finished in 2018, 2019, 2020, 2021, and 2022. So data 20 is for began fall 2014 ended in 2018, data 21 is fall 2015 ended in 2019, data 22 is began fall 2016 ended 2020, data 23 is began fall 2017 ended 2021, and data 24 is began fall 2018 ended 2022.
+
+My one question would be am I absolutely correct about this because they really did not provide any detail about what the numbers mean. 
+
+Relevant columns included in all sheets (I think I need to clean the data as it is quite confusing once it is put in R and I think it messed up column names) include Completed bachelor's degree within 4 years - Number, and Completed bachelor's degree within 4 years - Rate for both men and women, as well as the Adjusted Cohort column for those seeking Bachelor's Degrees. These are important to determine both what schools have a significant differences in gendered graduation rates, as well as determine which schools have the biggest gaps in rates (thia is why the rates columns are important)
+
+Nothing is really missing but an explanation of the year cohorts and inclusion of a non-female/non-male category, but that is not needed for my analysis, just would have been cool. Since I am doing the point differences between the categories and adjusting my hypotheses to include that UMD will have the biggest gap between male and female four-year graduation rates, I have the needed rates to calculate the gap. 
+
