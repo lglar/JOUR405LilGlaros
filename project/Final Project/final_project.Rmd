@@ -1,3 +1,17 @@
+Data tests or analysis I think are applicable to my project and hypotheses 
+Test/Analysis: cor() function aka correlation coefficient
+Why: I want to see if gender and graduation rates are correlated, and how strong that relationship is
+Test/Analysis: Scatterplot aka ggplot()
+Why: This would also help show if the relationships are correlated, which also can show the strength of the relationship between gender and graduation rates (four year)
+Test/Analysis: t-test
+Why: Statistically significant differences between the gendered four year graduation rates of Big 10 Universities. Is there a difference between these rates and is that rate statistically significant? The one thing I have questions about is how I do this because there are 18 universities in this group. How should I do this? Like can I even do a t-test with 18 universities. I need advice on this. I also want to do this between years as well (need advice)
+Test/Analysis: Standard deviation
+Why: If there are statistically significant differences I'd like to see if there are any outlier universities, especially since I want to see if Maryland is especially different
+Test/Analysis: Z-score
+Why: Shows how many standard deviations a point is away from the mean, and outliers are really important for my analysis to see how Maryland compares amongst the gendered graduation rates of Big 10 universities.
+Test/Analysis: Percentiles aka mutate(percentile = ntile()
+Why: Also helps show how different data is compared to other data points, and any analysis of difference is useful for my purposes. If Maryland is in like the 99th percentile it would help prove my hypos. 
+
 ```{r}
 library(tidyverse)
 ```
