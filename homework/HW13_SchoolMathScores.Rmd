@@ -1,6 +1,6 @@
 ---
 title: "Identifying Schools with Biggest Differences in Math Test Scores, Part 2"
-author: "YOUR NAME"
+author: "Lillian Glaros"
 ---
 
 ```{r}
@@ -31,7 +31,7 @@ schools |> arrange(desc(`FARMS Pct`)) |> head(10)
 Are there any data quality issues like the ones you found in the Pennsylvania data? How does the distribution of FARMS percentages compare between the two counties? Note anything that concerns you or gives you confidence in the data.
 
 ANSWER HERE
-
+Unlike the Pennsylvania data there are not any 100% FARMS schools, so I'm not really seeing any data quality issues. The lack of 100% FARMS gives me confidence in the data, and is also a distinct difference in the distribution of the data, given that the PA data had several 100% FARMS schools. 
 
 ### Task 2: Create a Scatterplot and Compare (5 points)
 
@@ -39,7 +39,7 @@ Replace the REPLACE_ME value with the correct variable name to create a scatterp
 
 ```{r}
 schools |>
-  ggplot(aes(x = `REPLACE_ME`, y = `% Met or Exceeded Math Expectations`)) +
+  ggplot(aes(x = `FARMS Pct`, y = `% Met or Exceeded Math Expectations`)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE, color = "red") +
   labs(x = "FARMS Percentage", y = "% Met or Exceeded Math Expectations",
@@ -50,20 +50,20 @@ Describe what you see. Then compare this scatterplot specifically to the Pennsyl
 
 ANSWER HERE
 
-
+I see points moving in what looks like to me a more consistent downward line with the % met or exceeded expectations point going down as FARMS rises. There are some points not in keeping with this but there is for sure a clear pattern. Comparing to the PA data the data is in an actual line, while the PA data is more of a cloud all over, clustered to the left of the scatterplot. The relationship is more strong in Maryland as it more obeys the line of best fit, given the points create an actual line in lieu of a cloud and some random points off to the right. The direction of the MD Moco is negative, going down as FARMS rises, which the PA one is going up a bit as it moves right. The MD is going down more than the PA is going up. There are many reasons why two counties could have different results: data errors on each side (especially the 100% FARMS on the PA side), different educational strategies, the tests are probably different because they are different states, maybe PA MoCo cheats, maybe MD MoCo is really bad at meet FARMS students educational needs, or the MD data is just a coincidence. 
 ### Task 3: Linear Regression Model (5 points)
 
 Replace the REPLACE_ME value with the correct variable name to run a linear regression model predicting math scores from FARMS percentage.
 
 ```{r}
-model <- lm(`REPLACE_ME` ~ `FARMS Pct`, data = schools)
+model <- lm(`% Met or Exceeded Math Expectations` ~ `FARMS Pct`, data = schools)
 summary(model)
 ```
 
 Report the three key statistics: the p-value, the Adjusted R-squared, and the coefficient for FARMS Pct. Then interpret them together — not separately. What does the combination of these three numbers tell you about the relationship between poverty and math scores in Montgomery County, Md.? Is this model worth using? How does it compare to the Pennsylvania model?
 
 ANSWER HERE
-
+The p value is less than 0.00000000000000022 so the relationship is statistically significant because the value is so tiny. The adjusted r-squared value is 0.6734 so 67.34% of the variance in the data is explained by FARMS. The coefficient is -0.595 so given it is negative there is a negative relationship. (was using that to gather my thoughts). Interpreting all those together indicates a statistically significant negative relationship between being on FARMS and meeting or exceeding math expectations. Given that a large portion of the data variance is explained by the farms pct, it further shows this statistically significant relationship. I think this model is worth using because the data actually shows something; the relationship is significant, the scatterplot shows the data in an actual line and not a random line of best fit, and the FARMS pct actually seems to explain some of the variance (like way more than PA). Compared to the PA model it seems way better, the PA model showed so little of the variance was explained by FARMS and the relationship looked a lot less strong on the scatterplot, plus until we removed the 100% FARMS schools we couldnt even get a significant p-value.
 
 ### Task 4: Identifying Schools with the Biggest Residuals (6 points)
 
@@ -72,9 +72,9 @@ Replace the REPLACE_ME values with the correct variable names to calculate predi
 ```{r}
 schools <- schools |>
   mutate(
-    predicted = predict(REPLACE_ME),
+    predicted = predict(model),
     residual = `% Met or Exceeded Math Expectations` - predicted,
-    abs_residual = abs(REPLACE_ME)
+    abs_residual = abs(residual)
   ) |>
   arrange(desc(abs_residual))
 
@@ -89,6 +89,12 @@ For each of the two schools, answer:
 - What would your first reporting question be to the principal of that school?
 
 ANSWER HERE
+The school with the largest positive residual, 29.99, is Fox Chapel Elementary. Its zip code is 20876
+and its median household income is $119,731 with 9.8% of its population below the poverty line.The racial breakdown of the zip code is 29% Black, 22% white, 20% Asian and 25% Hispanic. The economic portion of the profile could help explain why the school is overperforming since the household income on average is so high, perhaps the wealthier students have access to good tutors and could be bringing the scores up. 
+The school with the largest negative residual is Germantown Elementary with -28.08. Its zip code is 20874. It has similar racial demographics to the previous zip code. Its Median household income is $115,022 and 8.3% of its population is below the poverty line. This does not square with the previous zip code because this one has very similar economic and social demographics in those regards. It also has similar levels of educational attainment. However the property values are one difference, the previous school's zip code has an median valuation of 487.3k for owner occupied units and this zip code has a valuation of 399k, so nearly a 90k difference. I know property taxes go into funding for schools so maybe a difference in funding could explain it?
+
+My question to the first principal, for Fox Chapel would be "How involved would you say parents are in supplementing their child's education whether financially or not?
+My question to the second principal, for Germantown would be "How much funding does your school receive and how much of that do you put towards standardized test prep?"
 
 
 ### Task 5: Evaluate the Model and Write the Pitch (7 points)
@@ -98,3 +104,5 @@ You've now run this analysis on two counties. Return to the school board member'
 Write a short story pitch of 4-6 sentences that addresses all of the following: Does the Maryland data support or contradict the claim? How does it compare to what you found in Pennsylvania? What would you ask the school board member if you called them for comment? And what's the most interesting specific finding from your residuals analysis: which school would you want to visit first, and why?
 
 ANSWER HERE
+Title: A tale of two counties
+Pitch: This story would use the two Montgomery counties to show what works and what doesnt with getting students under FARMS proficient or above in math. Given that the MD data supports the claim of the PA MoCo board member we could use the PA data to show that FARMS doesn't always have a relationship with lower math scores and show how PA MoCo helped their students, since the PA MoCo data shows a (albeit not totally strong) positive relationship. Given that this relationship isn't strong we wouldn't use it as support for saying there is no relationship between FARMS and scores but rather as an example of how MD's negative relationship can become less negative. I'd ask the school board member why majority FARMS schools in PA are doing so well, and if he thinks it is something the county is doing. I'd also ask them if they think the data is accurate. For the residual part of the story I'd like to visit Fox Chapel because it is an overperforming school and I'd like to determine what they are doing to help their students on FARMS. 
