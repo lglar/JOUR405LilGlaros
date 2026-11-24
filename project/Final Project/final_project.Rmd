@@ -1,3 +1,142 @@
+```{r}
+library(tidyverse)
+library(readxl)
+
+base_url <- paste0(
+  "https://raw.githubusercontent.com/lglar/",
+  "JOUR405LilGlaros/main/project/Final%20Project/"
+)
+
+files <- tribble(
+  ~filename,                                 ~report_year,
+  "SummaryTables-813-11-01-26 18-25 (2).xlsx",  2020,
+  "SummaryTables-813-11-01-26 18-25 (1).xlsx",  2021,
+  "SummaryTables-813-11-01-26 18-25.xlsx",      2022,
+  "SummaryTables-813-11-01-26 18-17.xlsx",      2023,
+  "SummaryTables-813-11-01-26 18-23.xlsx",      2024
+)
+
+read_graduation <- function(filename, report_year) {
+
+  # Download the Excel file from GitHub.
+  temp_file <- tempfile(fileext = ".xlsx")
+  on.exit(unlink(temp_file))
+
+  download.file(
+    url = paste0(base_url, URLencode(filename, reserved = TRUE)),
+    destfile = temp_file,
+    mode = "wb",
+    quiet = TRUE
+  )
+
+  # Read the table and keep bachelor's-seeking men and women.
+  read_excel(
+    temp_file,
+    sheet = "TableLibrary",
+    skip = 4,
+    col_types = "text",
+    na = c("", "-")
+  ) |>
+    filter(
+      Cohort == "Bachelor's degree-seeking",
+      `Gender - Number` %in% c("Men", "Women")
+    ) |>
+    transmute(
+      unitid = `Unit Id`,
+      school = `Institution Name (N=18)`,
+      report_year = report_year,
+      gender = str_to_lower(`Gender - Number`),
+      cohort_size = parse_double(`Adjusted Cohort`),
+      graduates_4yr = parse_double(
+        `Completed bachelor's degree within 4 years - Number`
+      ),
+      rate_4yr = parse_double(
+        `Completed bachelor's degree within 4 years - Rate`
+      )
+    )
+}
+
+# Read and combine all five spreadsheets.
+graduation_long <- map2(
+  files$filename,
+  files$report_year,
+  read_graduation
+) |>
+  list_rbind()
+
+# Create one row per school and report year.
+graduation <- graduation_long |>
+  pivot_wider(
+    names_from = gender,
+    values_from = c(cohort_size, graduates_4yr, rate_4yr),
+    names_glue = "{gender}_{.value}"
+  ) |>
+  mutate(
+    gap_pp = women_rate_4yr - men_rate_4yr,
+    complete_pair = !is.na(men_rate_4yr) &
+                    !is.na(women_rate_4yr)
+  ) |>
+  arrange(report_year, school)
+
+graduation |>
+  select(
+    school, report_year,
+    men_rate_4yr, women_rate_4yr,
+    gap_pp, complete_pair
+  )
+  
+# for analyses requiring both rates
+graduation_complete <- graduation |>
+  filter(complete_pair)
+
+```
+```{r}
+graduation_complete |>
+  group_by(school) |>
+  summarize(gap_pp = mean(gap_pp, na.rm = TRUE)) |>
+  ggplot(aes(x = reorder(school, gap_pp),
+             y = gap_pp,
+             fill = gap_pp > 0)) +
+  geom_col() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  coord_flip() +
+  labs(
+    x = "School",
+    y = "Average Gender Difference (Percentage Points)",
+    title = "Average Gender Gap in Four-Year Graduation Rates",
+    subtitle = "Average across five reporting years: 2020-2024",
+    fill = "Higher Graduation Rate"
+  ) +
+  scale_fill_manual(
+    values = c("TRUE" = "steelblue", "FALSE" = "salmon"),
+    labels = c("FALSE" = "Men", "TRUE" = "Women")
+  ) +
+  theme_minimal()
+```
+*A summary of graphing events:*
+*1. Tried to make a scatterplot, but the titles made the data impossible to read so I asked ChatGPT and Professor Willis for help.*
+*2. We then changes axises and labels but the scatterplot wasnt seeming to be the best way to display the data for differences amongst the schools.*
+*3. Asked chat GPT for graph recommendations and it gave a pretty good bar graph recommendation, but upon putting the code in Professor Willis and I realized it was adding the gendered graduation differences together so I went back to Chat GPT.*
+*4. Chat GPT gave me some unsatisfactory graph recommendations so I ended up asking it to make it so each school's gendered difference was an average of the five reporting years, like Professor Willis had recommended. *
+*Chat GPT convo summary: https://drive.google.com/file/d/1RLAYyt2tJz6IBopfOp7DikkLGX72ra4d/view?usp=sharing*
+*This chart unfortunately seems to disprove my hypo that UMD would have the biggest difference (although to truly determine this I need to use line graphs to look at each year independently), as UMD is right in the middle of the pack, with Michigan State at the top. I also think this means I should still do zscores as there are some schools with fairly large rates.*
+```{r}
+t.test(graduation_complete$men_rate_4yr,
+       graduation_complete$women_rate_4yr,
+       paired = TRUE)
+```
+*Came up with errors on the t-test so asked ChatGPT what I did wrong: https://drive.google.com/file/d/1AmIhYr8_ycCZYiUArBQU6Ypux7FzJE82/view?usp=sharing*
+*I think this means that the difference between male and female graduation rates is statistically significant because the p value is extremely low, far below 0.05 meaning that the null is rejected and the alternative fails to be rejected (I think??). According to the graph I did prior, it seems there are only positive gaps on average between women and men 4 yr graduation rates, in favor of women, so I guess this means that isn't due to just random chance? Not completely sure though. I'm also not sure how useful this t-test is for my work as I kind of knew this already. Would it be a good idea to do t-tests individually between schools? That sounds really complicated though, as each schools vs each school is like 144 t-tests (maybe more???). I think my interpretation in this case is pretty decent but I'm wondering if this has any relevance to my more interesting hypos? How else would significance testing help with them?*
+```{r}
+graduation_complete <- graduation_complete |>
+  mutate(
+    mean_rate = mean(gap_pp),
+    sd_rate = sd(gap_pp),
+    z_score = (gap_pp - mean_rate) / sd_rate)
+```
+*This one was nice as I don't think there were any errors, yay*
+*Interpretation: Technically none of the points are more than 3 st dev away from the mean so not really outliers, but Northwestern in the 2023 reporting year had a z-score of -2.78756280, so that was pretty away from the mean in terms of standard dev. That was the negative zscore with the greatest absolute value. With a zscore of 2.22350938, Ohio State in 2021 had the greatest positive zscore. What these indicate is that these schools were at least kinda unusual in terms of their gendered graduation gaps, and UMD once again is not on top, another hit to that hypothesis. I do want to figure out how to do this with the average gaps and not just by year to see the overall pattern.*
+
 Data tests or analysis I think are applicable to my project and hypotheses 
 Test/Analysis: cor() function aka correlation coefficient
 Why: I want to see if gender and graduation rates are correlated, and how strong that relationship is
